@@ -1,3 +1,4 @@
+
 name: Deploy com verificação de segurança
 
 on:
@@ -12,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Necessário para algumas ferramentas de segurança
+          fetch-depth: 0  # Necessário para algumas ferramentas de segurança
 
       # Verificação de segredos com gitleaks
       - name: Segurança: Verificação de Segredos
