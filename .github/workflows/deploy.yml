@@ -30,7 +30,7 @@ jobs:
       - name: Segurança: Análise de Vulnerabilidades em Dependências
         uses: owasp/dependency-check-action@v3 # Use a versão mais recente
         with:
-          projectName: 'Mario Run' # Defina um nome para o seu projeto
+          projectName: 'SQLInjection Test' # Defina um nome para o seu projeto
           format: 'Sarif'
           outputDirectory: 'gl-sarif'
 
@@ -44,6 +44,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
         with:
           languages: 'javascript, php'
+          sarif_file: /github/workspace/codeql-sarif/codeql-sarif.json
 
 
         #Envia os resultados da análise de vulnerabilidades 
@@ -53,6 +54,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2 # Use a versão mais recente
         with:
           sarif_file: gl-sarif/dependency-check-report.sarif
+          
 
         #Específicos para análise de vulnerabilidades em PHP
       - name: Segurança: Análise Estática PHP
@@ -64,8 +66,13 @@ jobs:
         run: |
           curl -sS https://raw.githubusercontent.com/fabpot/local-php-security-checker/master/security-checker.phar -o security-checker.phar
           php security-checker.phar check-local
+        with:
+          format: 'Sarif'
+          outputDirectory: 'gl-sarif'
 
       - name: Segurança: Análise RIPS para PHP
         uses: docker://rips/rips
         with:
           args: --path=/github/workspace --format=github
+          format: 'Sarif'
+          outputDirectory: 'gl-sarif'
