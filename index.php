@@ -401,6 +401,7 @@ $user = $_SESSION['user'];
         // Função para buscar a cotação do BOVA11
         async function fetchBOVA11() {
             try { 
+                //Token exposto
                 const response = await fetch('https://brapi.dev/api/quote/BOVA11?range=1d&interval=1d&fundamental=false&token=eJGEyu8vVHctULdVdHYzQd');
                 const data = await response.json();
                 const bova = data.results[0];
@@ -427,6 +428,7 @@ $user = $_SESSION['user'];
         // Função para buscar notícias financeiras
         async function fetchNews() {
             try {
+                //API Key exposta
                 const response = await fetch('https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=b9961102615e4514b7f1ff574f4ce412');
                 const data = await response.json();
                 
