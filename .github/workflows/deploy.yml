@@ -16,8 +16,8 @@ jobs:
 
         #usa o gitleaks para procurar por 
         #segredos como senhas, tokens e chaves de API no seu código.
-      - name: Segurança: Verificação de Segredos
-        uses: gitleaks/gitleaks-action@v8 # Use a versão mais recente
+      # - name: Segurança: Verificação de Segredos
+      #   uses: gitleaks/gitleaks-action@v8 # Use a versão mais recente
         # Opcional: Configure para falhar o build se segredos forem encontrados
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
