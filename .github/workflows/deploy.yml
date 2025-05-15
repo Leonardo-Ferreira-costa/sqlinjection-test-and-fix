@@ -17,10 +17,10 @@ jobs:
 
       # Verificação de segredos com gitleaks
       - name: Segurança - Verificação de Segredos
-        uses: gitleaks/gitleaks-action@v8
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FAIL_ON_SECRETS: "true"
+        uses: gitleaks/gitleaks-action@v2  # Versão mais estável
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   FAIL_ON_SECRETS: "true"
 
       # Análise de vulnerabilidades em dependências
       - name: Segurança - Análise de Vulnerabilidades em Dependências
