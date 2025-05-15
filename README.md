@@ -152,3 +152,6 @@ Este tutorial mostrou como:
 2️⃣ Descobrir colunas (ORDER BY e UNION SELECT)
 3️⃣ Extrair tabelas e colunas (information_schema)
 4️⃣ Extrair dados (usuários e senhas)
+
+Se você chegou até aqui parabéns.
+Adicionei um arquivo de deploy que faz verificações de segurança, você pode checar no menu do repositório na aba Security.
