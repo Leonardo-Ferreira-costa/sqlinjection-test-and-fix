@@ -16,14 +16,14 @@ jobs:
           fetch-depth: 0  # Necessário para algumas ferramentas de segurança
 
       # Verificação de segredos com gitleaks
-      - name: Segurança: Verificação de Segredos
+      - name: Segurança - Verificação de Segredos
         uses: gitleaks/gitleaks-action@v8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FAIL_ON_SECRETS: "true"
 
       # Análise de vulnerabilidades em dependências
-      - name: Segurança: Análise de Vulnerabilidades em Dependências
+      - name: Segurança - Análise de Vulnerabilidades em Dependências
         uses: owasp/dependency-check-action@v3
         with:
           projectName: 'SQLInjection Test'
@@ -32,32 +32,26 @@ jobs:
           outputDirectory: './dependency-check-reports'
 
       # Análise de segurança com CodeQL
-      - name: Segurança: Análise de Segurança (CodeQL)
+      - name: Segurança - Análise de Segurança (CodeQL)
         uses: github/codeql-action/analyze@v2
         with:
           languages: 'javascript, php'
 
       # Upload dos resultados para GitHub Security
-      - name: Segurança: Envio de Resultados para o GitHub Security
+      - name: Segurança - Envio de Resultados para o GitHub Security
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: './dependency-check-reports/dependency-check-report.sarif'
 
       # Análise estática PHP
-      - name: Segurança: Análise Estática PHP
+      - name: Segurança - Análise Estática PHP
         uses: docker://phpstan/phpstan
         with:
           args: analyse --level=max --error-format=github ./src
 
       # Verificação de vulnerabilidades PHP
-      - name: Segurança: Verificar Vulnerabilidades PHP
+      - name: Segurança - Verificar Vulnerabilidades PHP
         run: |
           curl -sS https://raw.githubusercontent.com/fabpot/local-php-security-checker/master/security-checker.phar -o security-checker.phar
           php security-checker.phar check-local ./composer.lock > php-security-report.json
         working-directory: ./
-
-      # Análise RIPS para PHP (opcional - requer configuração adicional)
-      # - name: Segurança: Análise RIPS para PHP
-      #   run: |
-      #     docker run --rm -v "$(pwd):/src" rips/rips --path=/src --format=github
-      #   working-directory: ./
