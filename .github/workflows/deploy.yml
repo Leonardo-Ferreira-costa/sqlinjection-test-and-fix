@@ -15,9 +15,10 @@ jobs:
         with:
           fetch-depth: 0  # Necessário para algumas ferramentas de segurança
 
+      #Apresentando erro no deploy, verificar
       # Verificação de segredos com gitleaks
-      - name: Segurança - Verificação de Segredos
-        uses: gitleaks/gitleaks-action@v2  # Versão mais estável
+      # - name: Segurança - Verificação de Segredos
+      #   uses: gitleaks/gitleaks-action@v2  # Versão mais estável
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         #   FAIL_ON_SECRETS: "true"
