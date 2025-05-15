@@ -39,10 +39,11 @@ jobs:
         #Uso não sanitizado de innerHTML
         #Manipulação insegura de eventos
         #Uso inseguro de jQuery
+        #Incluso PHP
       - name: Segurança: Análise de Segurança (CodeQL)
         uses: github/codeql-action/analyze@v2
         with:
-          languages: 'javascript'
+          languages: 'javascript, php'
 
 
         #Envia os resultados da análise de vulnerabilidades 
@@ -52,3 +53,19 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2 # Use a versão mais recente
         with:
           sarif_file: gl-sarif/dependency-check-report.sarif
+
+        #Específicos para análise de vulnerabilidades em PHP
+      - name: Segurança: Análise Estática PHP
+        uses: docker://phpstan/phpstan
+        with:
+          args: analyse --level=max --error-format=github
+
+      - name: Segurança: Verificar Vulnerabilidades PHP
+        run: |
+          curl -sS https://raw.githubusercontent.com/fabpot/local-php-security-checker/master/security-checker.phar -o security-checker.phar
+          php security-checker.phar check-local
+
+      - name: Segurança: Análise RIPS para PHP
+        uses: docker://rips/rips
+        with:
+          args: --path=/github/workspace --format=github
