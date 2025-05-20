@@ -28,12 +28,15 @@ jobs:
           sudo mv gitleaks /usr/local/bin/
  
       # Gitleaks check
-      - name: Executar Gitleaks
-        run: |
-          gitleaks detect --redact -v \
-          --exit-code=2 \
-          --report-format=sarif \
-          --report-path=reports/gitleaks-report.sarif
+      - name: Verificação de Segredos (Gitleaks)
+        uses: gitleaks/gitleaks-action@v4.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          sarif-output: 'reports/gitleaks-report.sarif'
+          exit-code: '2'
+          redact: true
+          verbose: true
       
       #Verificação de dependencias
       - name: Dependency Check
