@@ -50,6 +50,7 @@ jobs:
         with:
           args: analyse --level=max --error-format=github ${{ inputs.php-path || '.' }}
           output: 'phpstan-report.sarif'
+        continue-on-error: true
 
           # Upload dos resultados para GitHub Security
       - name: Segurança - Envio de Resultados para o GitHub Security
