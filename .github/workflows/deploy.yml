@@ -46,7 +46,7 @@ jobs:
       
       # Análise estática PHP
       - name: Segurança - Análise Estática PHP
-        uses: docker://phpstan/phpstan
+        uses: docker://ghcr.io/phpstan/phpstan
         with:
           args: analyse --level=max --error-format=github ./src
           output: 'phpstan-report.sarif'
