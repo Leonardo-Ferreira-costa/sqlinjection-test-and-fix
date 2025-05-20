@@ -48,8 +48,7 @@ jobs:
       - name: Segurança - Análise Estática PHP
         uses: docker://ghcr.io/phpstan/phpstan
         with:
-          scan-dir: '.'
-          args: analyse --level=max --error-format=github ./src
+          args: analyse --level=max --error-format=github ${{ inputs.php-path || '.' }}
           output: 'phpstan-report.sarif'
 
           # Upload dos resultados para GitHub Security
