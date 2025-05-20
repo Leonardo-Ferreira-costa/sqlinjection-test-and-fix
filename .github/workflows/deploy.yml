@@ -20,6 +20,20 @@ jobs:
 
       - name: Criar diretório de relatórios
         run: mkdir -p reports
+
+      - name: Instalar Gitleaks
+        run: |
+        curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+        chmod +x gitleaks
+        sudo mv gitleaks /usr/local/bin/
+ 
+      - name: Executar Gitleaks
+        run: |
+           gitleaks detect --redact -v \
+             --exit-code=2 \
+            --report-format=sarif \
+            --report-path=reports/gitleaks-report.sarif
+            
       # Gitleaks check
       - name: Executar Gitleaks
         run: |
