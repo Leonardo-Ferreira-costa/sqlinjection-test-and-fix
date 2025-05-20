@@ -31,7 +31,7 @@ jobs:
 
       # Análise de dependências
       - name: Segurança - Análise de Dependências (OWASP)
-        uses: OWASP/dependency-check-action@v3
+        uses: OWASP/dependency-check-action@main
         with:
           project: 'SQLInjection Test'
           scan-dir: '.'
