@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Criar diretório reports
+        run: mkdir -p reports
 
       - name: Segurança - Verificação de Segredos
         uses: gitleaks/gitleaks-action@v2.3.9
@@ -54,6 +56,6 @@ jobs:
 
           # Upload dos resultados para GitHub Security
       - name: Segurança - Envio de Resultados para o GitHub Security
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: 'reports/owasp-report.sarif'  # Caminho relativo
+          sarif_file: 'reports/sec-report.sarif'  # Caminho relativo
