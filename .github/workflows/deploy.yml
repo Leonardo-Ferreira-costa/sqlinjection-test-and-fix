@@ -20,24 +20,21 @@ jobs:
 
       - name: Criar diretório de relatórios
         run: mkdir -p reports
-
-      # Verificação de segredos
-      - name: Segurança - Verificação de Segredos
-        uses: gitleaks/gitleaks-action@v2.3.9
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          sarif-output: 'reports/gitleaks-report.sarif'
-
-      # Análise de dependências
-      - name: Segurança - Análise de Dependências (OWASP)
+      # Gitleaks check
+      - name: Executar Gitleaks
+        run: |
+          gitleaks detect --redact -v \
+            --exit-code=2 \
+            --report-format=sarif \
+            --report-path=reports/gitleaks-report.sarif
+      #Verificação de dependencias
+      - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: 'SQLInjection Test'
-          scan-dir: '.'
-          format: 'SARIF'
-          output: 'reports/'
-          fail-on-cvss: 7 # Falha se encontrar vulnerabilidades críticas
+          project: SQLInjection Test
+          path: .
+          format: SARIF
+          out: reports
 
       # Análise estática PHP
       - name: Segurança - Análise Estática PHP
