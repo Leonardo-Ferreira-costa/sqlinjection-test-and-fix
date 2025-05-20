@@ -10,52 +10,46 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write # Permite enviar relatórios de segurança (SARIF)
+      security-events: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Criar diretório reports
+
+      - name: Criar diretório de relatórios
         run: mkdir -p reports
 
+      # Verificação de segredos
       - name: Segurança - Verificação de Segredos
-        uses: gitleaks/gitleaks-action@v2.3.9
+        uses: gitleaks/gitleaks-action@v4.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          output: 'gitleaks-report.sarif'
+          sarif-output: 'reports/gitleaks-report.sarif'
 
+      # Análise de dependências
       - name: Segurança - Análise de Dependências (OWASP)
-        uses: dependency-check/Dependency-Check_Action@main
-        env:
-          # actions/setup-java@v1 changes JAVA_HOME so it needs to be reset to match the depcheck image
-          JAVA_HOME: /opt/jdk
+        uses: OWASP/dependency-check-action@v3
         with:
           project: 'SQLInjection Test'
           scan-dir: '.'
           format: 'SARIF'
-          output: 'reports/owasp-report.sarif'  # Gera em um subdiretório
+          output: 'reports/'
+          fail-on-cvss: 7 # Falha se encontrar vulnerabilidades críticas
 
-      # - name: Upload relatório OWASP
-      #   uses: github/codeql-action/upload-sarif@v2.21.3
-      #   with:
-      #     project: 'PHP SQLInjection'
-      #     scan-dir: '.'
-      #     format: SARIF
-      #     output: 'reports/owasp-report.sarif'  # Gera em um subdiretório
-      
       # Análise estática PHP
       - name: Segurança - Análise Estática PHP
         uses: docker://ghcr.io/phpstan/phpstan
         with:
-          args: analyse --level=max --error-format=github ${{ inputs.php-path || '.' }}
-          output: 'phpstan-report.sarif'
+          args: analyse --level=max --error-format=github --error-format=json > reports/phpstan-report.json
         continue-on-error: true
 
-          # Upload dos resultados para GitHub Security
-      - name: Segurança - Envio de Resultados para o GitHub Security
+      # Upload de todos os relatórios SARIF
+      - name: Segurança - Upload de Relatórios
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: 'reports/sec-report.sarif'  # Caminho relativo
+          sarif_file: |
+            reports/dependency-check-report.sarif
+            reports/gitleaks-report.sarif
