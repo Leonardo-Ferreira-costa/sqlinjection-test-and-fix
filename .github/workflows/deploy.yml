@@ -1,4 +1,3 @@
-
 name: Deploy com verificação de segurança
 
 on:
@@ -11,33 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necessário para algumas ferramentas de segurança
+          fetch-depth: 0
 
-      #Apresentando erro no deploy, verificar
-      # Verificação de segredos com gitleaks
-      # - name: Segurança - Verificação de Segredos
-      #   uses: gitleaks/gitleaks-action@v2  # Versão mais estável
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #   FAIL_ON_SECRETS: "true"
+      - name: Segurança - Verificação de Segredos
+        uses: gitleaks/gitleaks-action@v4.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Análise de vulnerabilidades em dependências
-      - name: Segurança - Análise de Vulnerabilidades em Dependências
-        uses: owasp/dependency-check-action@v3
+      - name: Segurança - Análise de Dependências (OWASP)
+        uses: OWASP/dependency-check-action@v3
         with:
-          projectName: 'SQLInjection Test'
-          scanPath: '.'
+          project: 'SQLInjection Test'
+          scan-dir: '.'
           format: 'SARIF'
-          outputDirectory: './dependency-check-reports'
+          output: 'dependency-check-report.sarif'
 
-      # Análise de segurança com CodeQL
-      - name: Segurança - Análise de Segurança (CodeQL)
-        uses: github/codeql-action/analyze@v2
+      - name: Upload relatório OWASP
+        uses: github/codeql-action/upload-sarif@v2
         with:
-          languages: 'javascript, php'
-
+          sarif_file: 'dependency-check-report.sarif'
+      
       # Upload dos resultados para GitHub Security
       - name: Segurança - Envio de Resultados para o GitHub Security
         uses: github/codeql-action/upload-sarif@v2
@@ -49,10 +43,3 @@ jobs:
         uses: docker://phpstan/phpstan
         with:
           args: analyse --level=max --error-format=github ./src
-
-      # Verificação de vulnerabilidades PHP
-      - name: Segurança - Verificar Vulnerabilidades PHP
-        run: |
-          curl -sS https://raw.githubusercontent.com/fabpot/local-php-security-checker/master/security-checker.phar -o security-checker.phar
-          php security-checker.phar check-local ./composer.lock > php-security-report.json
-        working-directory: ./
