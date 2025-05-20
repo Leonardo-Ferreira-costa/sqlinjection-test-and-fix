@@ -36,13 +36,13 @@ jobs:
           format: 'SARIF'
           output: 'reports/owasp-report.sarif'  # Gera em um subdiretório
 
-      - name: Upload relatório OWASP
-        uses: github/codeql-action/upload-sarif@v2.21.3
-        with:
-          project: 'PHP SQLInjection'
-          scan-dir: '.'
-          format: SARIF
-          output: 'reports/owasp-report.sarif'  # Gera em um subdiretório
+      # - name: Upload relatório OWASP
+      #   uses: github/codeql-action/upload-sarif@v2.21.3
+      #   with:
+      #     project: 'PHP SQLInjection'
+      #     scan-dir: '.'
+      #     format: SARIF
+      #     output: 'reports/owasp-report.sarif'  # Gera em um subdiretório
       
       # Análise estática PHP
       - name: Segurança - Análise Estática PHP
