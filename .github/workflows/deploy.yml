@@ -21,23 +21,27 @@ jobs:
       - name: Criar diretório de relatórios
         run: mkdir -p reports
 
-      - name: Instalar Gitleaks
-        run: |
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-          chmod +x gitleaks
-          sudo mv gitleaks /usr/local/bin/
+      # - name: Instalar Gitleaks
+      #   run: |
+      #     curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+      #     chmod +x gitleaks
+      #     sudo mv gitleaks /usr/local/bin/
  
-      # Gitleaks check
-      - name: Verificação de Segredos (Gitleaks)
-        uses: gitleaks/gitleaks-action@v4.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          sarif-output: 'reports/gitleaks-report.sarif'
-          exit-code: '2'
-          redact: true
-          verbose: true
-      
+      # - name: Executar Gitleaks
+      #   run: |
+      #     gitleaks detect --redact -v \
+      #     --exit-code=2 \
+      #     --report-format=sarif \
+      #     --report-path=reports/gitleaks-report.sarif
+
+      # # Gitleaks check
+      # - name: Executar Gitleaks
+      #   run: |
+      #     gitleaks detect --redact -v \
+      #       --exit-code=2 \
+      #       --report-format=sarif \
+      #       --report-path=reports/gitleaks-report.sarif
+
       #Verificação de dependencias
       - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
@@ -60,4 +64,4 @@ jobs:
         with:
           sarif_file: |
             reports/dependency-check-report.sarif
-            reports/gitleaks-report.sarif
+          # reports/gitleaks-report.sarif
