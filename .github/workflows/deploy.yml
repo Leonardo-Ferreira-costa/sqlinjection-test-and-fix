@@ -18,9 +18,14 @@ jobs:
         uses: gitleaks/gitleaks-action@v2.3.9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          output: 'dependency-check-report.sarif'
 
       - name: Segurança - Análise de Dependências (OWASP)
-        uses: OWASP/dependency-check-action@main
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          # actions/setup-java@v1 changes JAVA_HOME so it needs to be reset to match the depcheck image
+          JAVA_HOME: /opt/jdk
         with:
           project: 'SQLInjection Test'
           scan-dir: '.'
@@ -30,16 +35,17 @@ jobs:
       - name: Upload relatório OWASP
         uses: github/codeql-action/upload-sarif@v2.21.3
         with:
-          sarif_file: 'dependency-check-report.sarif'
+          output: 'dependency-check-report.sarif'
       
       # Upload dos resultados para GitHub Security
       - name: Segurança - Envio de Resultados para o GitHub Security
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: './dependency-check-reports/dependency-check-report.sarif'
+          output: 'dependency-check-report.sarif'
 
       # Análise estática PHP
       - name: Segurança - Análise Estática PHP
         uses: docker://phpstan/phpstan
         with:
           args: analyse --level=max --error-format=github ./src
+          output: 'dependency-check-report.sarif'
