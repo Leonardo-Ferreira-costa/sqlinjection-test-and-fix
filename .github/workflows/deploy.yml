@@ -29,10 +29,10 @@ jobs:
  
       - name: Executar Gitleaks
         run: |
-           gitleaks detect --redact -v \
-             --exit-code=2 \
-            --report-format=sarif \
-            --report-path=reports/gitleaks-report.sarif
+          gitleaks detect --redact -v \
+          --exit-code=2 \
+          --report-format=sarif \
+          --report-path=reports/gitleaks-report.sarif
 
       # Gitleaks check
       - name: Executar Gitleaks
