@@ -8,6 +8,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # Permite enviar relatórios de segurança (SARIF)
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
