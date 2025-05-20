@@ -20,7 +20,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Segurança - Análise de Dependências (OWASP)
-        uses: OWASP/dependency-check-action@v3
+        uses: OWASP/dependency-check-action@main
         with:
           project: 'SQLInjection Test'
           scan-dir: '.'
@@ -28,7 +28,7 @@ jobs:
           output: 'dependency-check-report.sarif'
 
       - name: Upload relatório OWASP
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v2.21.3
         with:
           sarif_file: 'dependency-check-report.sarif'
       
